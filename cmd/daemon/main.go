@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/myrat012/to-do/internal/controller/http"
+	"github.com/myrat012/to-do/internal/usecase"
 	"github.com/myrat012/to-do/pkg/config"
 )
 
@@ -19,11 +20,14 @@ func main() {
 		return
 	}
 
+	// Use cases
+	useCases := usecase.LoadUseCases()
+
 	// Waiting signal
 	signalChan := make(chan os.Signal, 1)
 	quit := make(chan interface{})
 
-	srv := http.NewService(cfg)
+	srv := http.NewService(cfg, useCases)
 	if err != nil {
 		fmt.Printf("could not initialize http.NewService: %v", err)
 		return
